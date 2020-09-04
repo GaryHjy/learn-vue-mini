@@ -15,6 +15,7 @@ export function initState(vm) {
   }
 }
 
+// 劫持
 export function observe (data) {
   if(typeof data !== 'object' || data === null) {
     return
@@ -22,6 +23,7 @@ export function observe (data) {
   return new Observer(data);
 }
 
+// 实例代理 -> vm.xxx => vm._data.xxx
 function proxy(vm, source, key) {
   Object.defineProperty(vm, key, {
     get() {
@@ -33,6 +35,7 @@ function proxy(vm, source, key) {
   })
 }
 
+// 初始化data数据
 function initData(vm) {
   let data = vm.$options.data;
   data = vm._data = typeof data === 'function' ? data.call(vm) : data || {};
