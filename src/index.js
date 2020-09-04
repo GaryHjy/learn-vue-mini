@@ -1,1 +1,2 @@
-document.write("test");
+import Vue from 'Vue';
+
