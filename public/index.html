@@ -6,6 +6,18 @@
   <title>vue mini</title>
 </head>
 <body>
-  <div id="app"></div>
+  <div id="app">
+    <input type="text" v-model="name">
+    {{name}}
+    <div>
+      {{obj.name}}
+      <div>
+        {{obj.age}}
+      </div>
+      <div>
+        {{obj.sex}}
+      </div>
+    </div>
+  </div>
 </body>
 </html>

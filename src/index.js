@@ -9,7 +9,8 @@ let vm = new Vue({
       sex: '男',
       obj: {
         name: '小红',
-        age: 10
+        age: 10,
+        sex: '女'
       },
       arr: [0, 1, 2]
     }
