@@ -1,4 +1,5 @@
 import { observe } from './index'
+import { arrayMethods, observerArray } from './array';
 
 // 数据劫持
 export function defineReactive(data, key, value) {
@@ -6,10 +7,13 @@ export function defineReactive(data, key, value) {
   observe(value);
   Object.defineProperty(data, key, {
     get() {
+      console.log('获取数据', data, key);
       return value;
     },
     set(newValue) {
       if(value === newValue) return;
+      console.log('更新数据');
+      observe(newValue); // 新增的值可能为对象
       value = newValue;
     }
   })
@@ -17,7 +21,12 @@ export function defineReactive(data, key, value) {
 
 class Observer {
   constructor(data) {
-    this.walk(data);
+    if (Array.isArray(data)) {
+      data.__proto__ = arrayMethods;
+      observerArray(data);
+    } else {
+      this.walk(data);
+    }
   }
 
   // 循环遍历进行数据劫持

@@ -10,7 +10,8 @@ let vm = new Vue({
       obj: {
         name: '小红',
         age: 10
-      }
+      },
+      arr: [0, 1, 2]
     }
   },
   computed: {
@@ -21,4 +22,4 @@ let vm = new Vue({
   },
 })
 
-console.log(vm);
+console.log(vm.arr.push(4), vm.arr);
