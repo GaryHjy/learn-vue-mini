@@ -1,3 +1,4 @@
+import { pushTarget, popTarget } from './dep';
 let id = 0;
 
 class Watcher {
@@ -17,11 +18,31 @@ class Watcher {
     this.cb = cb;
     this.opts = opts;
     this.id = id++;
-    this.getter();
+    this.deps = [];
+    this.depId = new Set();
+    this.get();
   }
 
   get() {
+    console.log('触发 watch get');
+    pushTarget(this);
     this.getter();
+    popTarget();
+  }
+
+  update() {
+    console.log('watch update');
+    this.get();
+  }
+
+  // 实现与dep进行关联
+  addDep(dep) {
+    let id = dep.id;
+    if(!this.depId.has(id)) {
+      this.depId.add(id);
+      this.deps.push(dep);
+      dep.addSub(this);
+    }
   }
 }
 

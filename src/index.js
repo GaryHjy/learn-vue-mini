@@ -23,4 +23,8 @@ let vm = new Vue({
   },
 })
 
-console.log(vm.arr.push(4), vm.arr);
+setTimeout(() => {
+  vm.name = '小红';
+}, 3000);
+
+// console.log(vm.arr.push(4), vm.arr);
