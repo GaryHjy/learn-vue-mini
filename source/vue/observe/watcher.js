@@ -1,4 +1,5 @@
 import { pushTarget, popTarget } from './dep';
+import { util } from '../util';
 let id = 0;
 
 class Watcher {
@@ -12,22 +13,29 @@ class Watcher {
   constructor(vm, expOrFn, cb = () => {}, opts = {}) {
     this.vm = vm;
     this.expOrFn = expOrFn;
-    if (typeof expOrFn === 'function') {
+    if(typeof expOrFn === 'function') {
       this.getter = expOrFn;
+    } else {
+      this.getter = function() {
+        return util.getValue(vm, expOrFn);
+      }
+    }
+    if(opts.user) {
+      this.user = true;
     }
     this.cb = cb;
     this.opts = opts;
     this.id = id++;
     this.deps = [];
     this.depId = new Set();
-    this.get();
+    this.value = this.get();
   }
 
   get() {
-    console.log('触发 watch get');
     pushTarget(this);
-    this.getter();
+    let value = this.getter();
     popTarget();
+    return value;
   }
 
   update() {
@@ -45,7 +53,10 @@ class Watcher {
   }
 
   run() {
-    this.get();
+    let value = this.get();
+    if(this.value !== value) {
+      this.cb(value, this.value);
+    }
   }
 }
 

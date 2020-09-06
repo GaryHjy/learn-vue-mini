@@ -8,13 +8,11 @@ class Dep {
 
   // 订阅
   addSub(watcher) {
-    console.log('dep addSub');
     this.subs.push(watcher);
   }
 
   // 发布
   notify() {
-    console.log('dep notify', this.subs);
     this.subs.forEach(watcher => watcher.update());
   }
 

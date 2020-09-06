@@ -19,16 +19,18 @@ let vm = new Vue({
 
   },
   watch: {
-
+    name(value, oldValue) {
+      console.log(value, oldValue);
+    }
   },
 })
 
 setTimeout(() => {
-  // vm.name = '小红';
+  vm.name = '小红';
   // vm.name = '小';
   // vm.name = '红';
   // vm.name = 'jjj';
-  vm.arr[0].push(1);
+  // vm.arr[0].push(1);
 }, 3000);
 
 // console.log(vm.arr.push(4), vm.arr);

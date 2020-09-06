@@ -11,7 +11,7 @@ export function initState(vm) {
   }
   
   if(opts.watch) {
-    initWatch();
+    initWatch(vm);
   }
 }
 
@@ -54,6 +54,14 @@ function initComputed () {
 
 }
 
-function initWatch () {
+function createWatch (vm, key, handler) {
+  vm.$watch(key, handler);
+}
 
+function initWatch (vm) {
+  let watch = vm.$options.watch;
+  for(let key in watch) {
+    let handler = watch[key];
+    createWatch(vm, key, handler);
+  }
 }
