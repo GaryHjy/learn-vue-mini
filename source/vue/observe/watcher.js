@@ -27,7 +27,7 @@ class Watcher {
     this.opts = opts;
     this.id = id++;
     this.deps = [];
-    this.depId = new Set();
+    this.depsId = new Set();
     this.value = this.get();
   }
 
@@ -45,8 +45,8 @@ class Watcher {
   // 实现与dep进行关联
   addDep(dep) {
     let id = dep.id;
-    if(!this.depId.has(id)) {
-      this.depId.add(id);
+    if(!this.depsId.has(id)) {
+      this.depsId.add(id);
       this.deps.push(dep);
       dep.addSub(this);
     }
@@ -69,7 +69,7 @@ function flushQueue() {
 
 function queueWatcher(watcher) {
   let id = watcher.id;
-  if(has[id] == null) {
+  if(!has[id]) {
     has[id] = true;
     queue.push(watcher);
     nextTick(flushQueue);
@@ -88,7 +88,8 @@ function nextTick(cb) {
   }
 
   if(Promise) {
-    return Promise.resolve().then(timerFunc);
+    Promise.resolve().then(timerFunc);
+    return;
   }
   if(MutationObserver) {
     let observe = new MutationObserver(timerFunc);
@@ -98,12 +99,13 @@ function nextTick(cb) {
     return;
   }
   if(setImmediate) {
-    return setImmediate(timerFunc);
+    setImmediate(timerFunc);
+    return;
   }
   if(setTimeout) {
-    return setTimeout(timerFunc, 0)
+    setTimeout(timerFunc, 0)
+    return;
   }
-
 }
 
 export default Watcher;

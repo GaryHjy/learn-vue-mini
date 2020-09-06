@@ -54,14 +54,14 @@ function initComputed () {
 
 }
 
-function createWatch (vm, key, handler) {
-  vm.$watch(key, handler);
+function createWatcher (vm, key, handler) {
+  return vm.$watch(key, handler);
 }
 
 function initWatch (vm) {
   let watch = vm.$options.watch;
   for(let key in watch) {
     let handler = watch[key];
-    createWatch(vm, key, handler);
+    createWatcher(vm, key, handler);
   }
 }
