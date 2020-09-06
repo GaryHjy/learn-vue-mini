@@ -25,10 +25,14 @@ class Watcher {
     }
     this.cb = cb;
     this.opts = opts;
+    this.immediate = opts.immediate;
     this.id = id++;
     this.deps = [];
     this.depsId = new Set();
     this.value = this.get();
+    if(this.immediate) {
+      this.cb(this.value);
+    }
   }
 
   get() {

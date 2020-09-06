@@ -19,15 +19,15 @@ let vm = new Vue({
 
   },
   watch: {
-    age(value, oldValue) {
-      console.log(value, oldValue);
-    },
-    // age: {
-    //   handler(value, oldValue) {
-    //     console.log(value, oldValue);
-    //   },
-    //   immediate: true
-    // }
+    // age(value, oldValue) {
+    //   console.log(value, oldValue);
+    // },
+    age: {
+      handler(value, oldValue) {
+        console.log(value, oldValue);
+      },
+      immediate: true
+    }
   },
 })
 
