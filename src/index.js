@@ -25,6 +25,9 @@ let vm = new Vue({
 
 setTimeout(() => {
   vm.name = '小红';
+  vm.name = '小';
+  vm.name = '红';
+  vm.name = 'jjj';
 }, 3000);
 
 // console.log(vm.arr.push(4), vm.arr);

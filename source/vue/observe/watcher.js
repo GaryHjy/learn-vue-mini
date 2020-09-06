@@ -31,8 +31,7 @@ class Watcher {
   }
 
   update() {
-    console.log('watch update');
-    this.get();
+    queueWatcher(this);
   }
 
   // 实现与dep进行关联
@@ -44,6 +43,56 @@ class Watcher {
       dep.addSub(this);
     }
   }
+
+  run() {
+    this.get();
+  }
+}
+
+let has = {};
+let queue = [];
+
+function flushQueue() {
+  queue.forEach(watcher => watcher.run());
+}
+
+function queueWatcher(watcher) {
+  let id = watcher.id;
+  if(has[id] == null) {
+    has[id] = true;
+    queue.push(watcher);
+    nextTick(flushQueue);
+  }
+}
+
+let callbacks = [];
+function flushCallbacks() {
+  callbacks.forEach(cb => cb());
+}
+function nextTick(cb) {
+  callbacks.push(cb);
+
+  let timerFunc = () => {
+    flushCallbacks();
+  }
+
+  if(Promise) {
+    return Promise.resolve().then(timerFunc);
+  }
+  if(MutationObserver) {
+    let observe = new MutationObserver(timerFunc);
+    let textNode = document.createTextNode(1);
+    observe.observe(textNode, { characterData: true });
+    textNode.textContent = 2;
+    return;
+  }
+  if(setImmediate) {
+    return setImmediate(timerFunc);
+  }
+  if(setTimeout) {
+    return setTimeout(timerFunc, 0)
+  }
+
 }
 
 export default Watcher;

@@ -6,7 +6,10 @@ export const util = {
     return keys.reduce((memo, cur) => memo[cur],vm);
   },
   compilerText(node, vm) {
-    node.textContent = node.textContent.replace(defaultRE, function(...args){
+    if(!node.expr) {
+      node.expr = node.textContent;
+    }
+    node.textContent = node.expr.replace(defaultRE, function(...args){
       return util.getValue(vm, args[1])
     })
   }
