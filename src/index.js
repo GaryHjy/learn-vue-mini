@@ -12,7 +12,7 @@ let vm = new Vue({
         age: 10,
         sex: '女'
       },
-      arr: [0, 1, 2]
+      arr: [[0], 1, 2]
     }
   },
   computed: {
@@ -24,10 +24,11 @@ let vm = new Vue({
 })
 
 setTimeout(() => {
-  vm.name = '小红';
-  vm.name = '小';
-  vm.name = '红';
-  vm.name = 'jjj';
+  // vm.name = '小红';
+  // vm.name = '小';
+  // vm.name = '红';
+  // vm.name = 'jjj';
+  vm.arr[0].push(1);
 }, 3000);
 
 // console.log(vm.arr.push(4), vm.arr);

@@ -1,11 +1,11 @@
 import { observe } from './index'
-import { arrayMethods, observerArray } from './array';
+import { arrayMethods, observerArray, dependArray } from './array';
 import Dep from './dep';
 
 // 数据劫持
 export function defineReactive(data, key, value) {
   // 深度递归劫持对象
-  observe(value);
+  let childOb = observe(value);
   let dep = new Dep;
   Object.defineProperty(data, key, {
     get() {
@@ -13,6 +13,12 @@ export function defineReactive(data, key, value) {
       // 依赖收集
       if(Dep.target) {
         dep.depend();
+        // 数组依赖收集
+        if(childOb) {
+          childOb.dep.depend();
+          // 深度收集
+          dependArray(value);
+        }
       }
       return value;
     },
@@ -29,6 +35,11 @@ export function defineReactive(data, key, value) {
 
 class Observer {
   constructor(data) {
+    this.dep = new Dep();
+    // data上挂载__ob__属性
+    Object.defineProperty(data, '__ob__', {
+      get: () => this
+    })
     if (Array.isArray(data)) {
       data.__proto__ = arrayMethods;
       observerArray(data);

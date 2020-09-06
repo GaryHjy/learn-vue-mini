@@ -22,6 +22,17 @@ export function observerArray(inserted) {
   }
 }
 
+// 深度收集数据依赖
+export function dependArray(value) {
+  for(let i = 0; i < value.length; i++) {
+    let currentItem = value[i];
+    currentItem.__ob__ && currentItem.__ob__.dep.depend();
+    if(Array.isArray(currentItem)) {
+      dependArray(currentItem);
+    }
+  }
+}
+
 // 对数组的方法进行重写
 methods.forEach(method => {
   arrayMethods[method] = function(...args) {
@@ -39,6 +50,8 @@ methods.forEach(method => {
         break;
     }
     if(inserted) observerArray(inserted);
+    // 依赖更新
+    this.__ob__.dep.notify();
     return r;
   }
 })
