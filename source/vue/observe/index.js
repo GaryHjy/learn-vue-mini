@@ -1,4 +1,6 @@
 import Observer from './observer';
+import Watcher from './watcher';
+import Dep from './dep';
 
 export function initState(vm) {
   let opts = vm.$options;
@@ -7,7 +9,7 @@ export function initState(vm) {
   }
 
   if(opts.computed) {
-    initComputed();
+    initComputed(vm, opts.computed);
   }
   
   if(opts.watch) {
@@ -50,8 +52,31 @@ function initData(vm) {
   observe(vm._data);
 }
 
-function initComputed () {
+function createComputedGetter (vm, key) {
+  let watcher = vm._watchersComputed[key];
+  return function () {
+    if(watcher) {
+      if(watcher.dirty) {
+        watcher.evaluate();
+      }
+      if(Dep.target) {
+        watcher.depend();
+      }
+      return watcher.value;
+    }
+  }
+}
 
+function initComputed (vm, computed) {
+  // 计算属性配置挂载vm上
+  let watchers = vm._watchersComputed = Object.create(null);
+  for(let key in computed) {
+    let userDef = computed[key];
+    watchers[key] = new Watcher(vm, userDef, () => {}, { lazy: true });
+    Object.defineProperty(vm, key, {
+      get: createComputedGetter(vm, key)
+    })
+  }
 }
 
 function createWatcher (vm, key, handler, opts) {

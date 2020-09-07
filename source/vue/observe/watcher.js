@@ -23,13 +23,15 @@ class Watcher {
     if(opts.user) {
       this.user = true;
     }
+    this.lazy = opts.lazy;
+    this.dirty = this.lazy;
     this.cb = cb;
     this.opts = opts;
     this.immediate = opts.immediate;
     this.id = id++;
     this.deps = [];
     this.depsId = new Set();
-    this.value = this.get();
+    this.value = this.lazy ? undefined : this.get();
     if(this.immediate) {
       this.cb(this.value);
     }
@@ -37,13 +39,17 @@ class Watcher {
 
   get() {
     pushTarget(this);
-    let value = this.getter();
+    let value = this.getter.call(this.vm);
     popTarget();
     return value;
   }
 
   update() {
-    queueWatcher(this);
+    if(this.lazy) {
+      this.dirty = true;
+    } else {
+      queueWatcher(this);
+    }
   }
 
   // 实现与dep进行关联
@@ -61,6 +67,18 @@ class Watcher {
     if(this.value !== value) {
       this.cb(value, this.value);
     }
+  }
+
+  depend() {
+    let i = this.deps.length;
+    while(i--) {
+      this.deps[i].depend();
+    }
+  }
+
+  evaluate() {
+    this.value = this.get();
+
   }
 }
 

@@ -4,6 +4,7 @@ let vm = new Vue({
   el: "#app",
   data() {
     return {
+      lastName: '黄',
       name: '小明',
       age: '18',
       sex: '男',
@@ -16,28 +17,32 @@ let vm = new Vue({
     }
   },
   computed: {
-
+    username() {
+      return this.lastName + this.name;
+    }
   },
   watch: {
     // age(value, oldValue) {
     //   console.log(value, oldValue);
     // },
-    age: {
-      handler(value, oldValue) {
-        console.log(value, oldValue);
-      },
-      immediate: true
-    }
+    // age: {
+    //   handler(value, oldValue) {
+    //     console.log(value, oldValue);
+    //   },
+    //   immediate: true
+    // }
   },
 })
 
 setTimeout(() => {
-  vm.age = '111';
+  // vm.age = '111';
   // vm.age = 11;
   // vm.name = '小';
   // vm.name = '红';
   // vm.name = 'jjj';
   // vm.arr[0].push(1);
+
+  vm.lastName = '张';
 }, 1000);
 
 // console.log(vm.arr.push(4), vm.arr);
