@@ -79,7 +79,7 @@ class Watcher {
 
   evaluate() {
     this.value = this.get();
-
+    this.dirty = false;
   }
 }
 
